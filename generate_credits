@@ -85,8 +85,8 @@ parse_args () {
                 return 2
             ;;
             -d=*|--days=*)
-                DAY="${ARG#*=}"
-                is_number $DAY
+                MAX="${ARG#*=}"
+                is_number $MAX
                 shift
             ;;
             -r=*|--repeat=*)
