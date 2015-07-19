@@ -8,28 +8,12 @@
 
 MAX=5
 REP=1
-OLD=`date +"%m%d%H%M%y"`
+TODAY=`date +"%m%d%H%M%y"`
+YESTERDAY="$TODAY"
 
-## Get current date and time values
-get_current_date () {
-    DAY=`date +"%d"`
-    MONTH=`date +"%m"`
-    YEAR=`date +"%y"`
-    HOUR=`date +"%H"`
-    MINUTES=`date +"%M"`
-}
-
-## Reduce date Day / Month / Year
-reduce_date () {
-    if [[ $(($DAY - 1)) -gt 1 ]]; then 
-        DAY=$(($DAY-1))
-        return 1
-    elif [[ $(($MONTH - 1)) -gt 1 ]]; then
-        MONTH=$(($MONTH-1))
-        return 1
-    elif [[ $(($YEAR - 1)) -gt 1 ]]; then
-        YEAR=$(($YEAR-1))
-    fi
+## Get yesterday's date
+get_yestarday_date () {
+    YESTERDAY=`date -v-1d +"%m%d%H%M%y"`
 }
 
 ## Check if number is integer
@@ -59,11 +43,9 @@ change_date () {
 	INDEX=0
 	while [[ $INDEX -lt $MAX ]]
 	do
-		reduce_date
-		CURRENT="$MONTH$DAY$HOUR$MINUTES$YEAR"
+		get_yestarday_date
 		INDEX=$(($INDEX + 1))
-		date $CURRENT
-        get_current_date
+		date $YESTERDAY
 		sleep 1
 	done
 }
@@ -71,7 +53,7 @@ change_date () {
 ## Reset date to current
 default_date () {
 	sleep 1
-	date $OLD
+	date $TODAY
 	echo "Date reset to default!"
 }
 
@@ -133,6 +115,5 @@ RET=$?
 
 [[ $RET == 0 ]] && usage && exit 1
 
-get_current_date
 repeat_action
 default_date
