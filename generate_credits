@@ -19,6 +19,7 @@ get_current_date () {
     MINUTES=`date +"%M"`
 }
 
+## Reduce date Day / Month / Year
 reduce_date () {
     if [[ $(($DAY - 1)) -gt 1 ]]; then 
         DAY=$(($DAY-1))
@@ -60,7 +61,6 @@ change_date () {
 	do
 		reduce_date
 		CURRENT="$MONTH$DAY$HOUR$MINUTES$YEAR"
-        echo $CURRENT
 		INDEX=$(($INDEX + 1))
 		date $CURRENT
         get_current_date
