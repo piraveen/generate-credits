@@ -1,0 +1,138 @@
+#!/bin/sh
+#
+# Simple script to change date and time to generate 
+# free Energy, Invest Points and credits in date based games
+#  
+# Piraveen Kamalathas <https://github.com/piraveen>
+# 
+
+MAX=5
+REP=1
+OLD=`date +"%m%d%H%M%y"`
+
+## Get current date and time values
+get_current_date () {
+    DAY=`date +"%d"`
+    MONTH=`date +"%m"`
+    YEAR=`date +"%y"`
+    HOUR=`date +"%H"`
+    MINUTES=`date +"%M"`
+}
+
+reduce_date () {
+    if [[ $(($DAY - 1)) -gt 1 ]]; then 
+        DAY=$(($DAY-1))
+        return 1
+    elif [[ $(($MONTH - 1)) -gt 1 ]]; then
+        MONTH=$(($MONTH-1))
+        return 1
+    elif [[ $(($YEAR - 1)) -gt 1 ]]; then
+        YEAR=$(($YEAR-1))
+    fi
+}
+
+## Check if number is integer
+is_number () {
+	REG='^[0-9]+$'
+    NUMBER=$1
+
+    if ! [[ $NUMBER =~ $REG ]]; then
+        echo "$NUMBER is not a valid number"
+        exit 1
+    fi
+}
+
+## Usage output
+usage () {
+    echo "Usage:"
+    echo "\t-h | --help : prints this menu => ./generate_credits -h"
+    echo "\t-d | --days : max days to move => ./generate_credits -d=10"
+    echo "\t-r | --repeat : repeat script  => ./generate_credits -r=3"
+    echo "\nExamples:"
+    echo "\t./generate_credits"
+    echo "\t./generate_credits -d=10 -r=2"
+}
+
+## Change day to D-N
+change_date () {
+	INDEX=0
+	while [[ $INDEX -lt $MAX ]]
+	do
+		reduce_date
+		CURRENT="$MONTH$DAY$HOUR$MINUTES$YEAR"
+        echo $CURRENT
+		INDEX=$(($INDEX + 1))
+		date $CURRENT
+        get_current_date
+		sleep 1
+	done
+}
+
+## Reset date to current
+default_date () {
+	sleep 1
+	date $OLD
+	echo "Date reset to default!"
+}
+
+## Parse parameters
+parse_args () {
+    for ARG in $@
+    do
+        case $ARG in
+            -h|--help)
+                usage
+                return 2
+            ;;
+            -d=*|--days=*)
+                DAY="${ARG#*=}"
+                is_number $DAY
+                shift
+            ;;
+            -r=*|--repeat=*)
+                REP="${ARG#*=}"
+                is_number $REP
+                shift
+            ;;
+            *)
+                echo "$ARG: invalid parameter"
+                return 0
+            ;;
+        esac
+    done
+    return 1
+}
+
+## Repeat script N times
+repeat_action () {
+    RINDEX=0
+	while [[ $RINDEX -lt $REP ]]
+	do
+		change_date
+        RINDEX=$(($RINDEX + 1))
+	done	
+}
+
+## Check aruguments
+check_args () {
+    if [[ $# == 0 ]]; then
+        return 1
+    fi
+
+    parse_args $@
+
+    RET=$?
+    return $RET
+}
+
+check_args $*
+
+RET=$?
+
+[[ $RET -gt 1 ]] && exit 1;
+
+[[ $RET == 0 ]] && usage && exit 1
+
+get_current_date
+repeat_action
+default_date
