@@ -30,12 +30,12 @@ is_number () {
 ## Usage output
 usage () {
     echo "Usage:"
-    echo "\t-h | --help : prints this menu => ./generate_credits -h"
-    echo "\t-d | --days : max days to move => ./generate_credits -d=10"
-    echo "\t-r | --repeat : repeat script  => ./generate_credits -r=3"
-    echo "\nExamples:"
-    echo "\t./generate_credits"
-    echo "\t./generate_credits -d=10 -r=2"
+    echo "      -h | --help : prints this menu => ./generate_credits -h"
+    echo "      -d | --days : max days to move => ./generate_credits -d=10"
+    echo "      -r | --repeat : repeat script  => ./generate_credits -r=3"
+    echo "Examples:"
+    echo "      ./generate_credits"
+    echo "      ./generate_credits -d=10 -r=2"
 }
 
 ## Change day to D-N
